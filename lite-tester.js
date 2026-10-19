@@ -30,6 +30,14 @@ throw err;
 console.log(`${artist.FirstName} ${artist.LastName}`); 
 }); 
 
-
+// now get just a single record 
+sql = `SELECT PaintingID,Title 
+FROM Paintings where PaintingID=?;`; 
+db.get(sql, [501], (err, painting) => { 
+if (err) { 
+throw err; 
+} 
+console.log('**** ' + painting.Title); 
+}); 
 // close the database 
 db.close();

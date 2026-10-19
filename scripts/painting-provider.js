@@ -1,4 +1,6 @@
 const path = require("path");
+
+
 const sqlite3 = require("sqlite3").verbose();
 
 const DB_PATH = path.join(__dirname, "../data/art.db");
@@ -18,12 +20,27 @@ let sql = `SELECT PaintingID, Paintings.ArtistID AS ArtistID,
 
 // Retrieve all paintings
 const retrievePaintings = (req, resp) => {
-
+  db.all(sql, [], (err, rows) => { 
+  if (err) { 
+  throw err; 
+  } 
+  console.log('getting all paintings...'); 
+  const paintings =  
+  rows.map(row => convertRecordToJson(row)); 
+  resp.json( paintings ); 
+  });  
 };
 
 // retrieve just a single painting based on the id
 const retrieveSinglePainting = (req, resp) => {
-
+  let mySQL = sql + " WHERE PaintingID=?"; 
+  db.get(mySQL, [req.params.id], (err, row) => { 
+  if (err) { 
+  throw err; 
+  } 
+  console.log('getting single painting...'); 
+  resp.json( convertRecordToJson(row) ); 
+  });  
 };
 
 // helper function to convert a database record into its JSON representation
